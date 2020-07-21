@@ -1,0 +1,49 @@
+syntax="proto3";
+
+package retail_shop;
+
+import "google/protobuf/wrappers.proto";
+import "protoc-gen-openapiv2/options/annotations.proto";
+
+// Defines the import path that should be used to import the generated package,
+// and the package name.
+option go_package = "https://github.com/lakwarus/microservices-with-gRPC/proto;stock";
+
+// These annotations are used when generating the OpenAPI file.
+option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
+  info: {
+    version: "1.0";
+  };
+  external_docs: {
+    url: "https://github.com/lakwarus/microservices-with-gRPC";
+    description: "microservices-with-gRPC repository";
+  }
+  schemes: HTTPS;
+};
+
+service StockService {
+    rpc UpdateStock(UpdateStockRequest) returns (Stock) {
+        option (google.api.http) = {
+          // Route to this method from POST requests to /api/v1/users
+          put: "/api/v1/stock/"
+          body: "*"
+        };
+        option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+          summary: "Update stock"
+          description: "Update current stock"
+          tags: "Stocks"
+        };
+    }
+    rpc GetStock(GetStockRequest) returns (Stock) {
+        option (google.api.http) = {
+          // Route to this method from POST requests to /api/v1/users
+          get: "/api/v1/stock/"
+          body: "*"
+        };
+        option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+          summary: "Get Stock"
+          description: "Get teh stock value"
+          tags: "Stocks"
+        };
+    }
+}
