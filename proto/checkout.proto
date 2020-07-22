@@ -1,13 +1,14 @@
 syntax="proto3";
 
 package retail_shop;
+import "google/protobuf/wrappers.proto";
 
 service CheckoutService {
     rpc Checkout(stream Bill) returns (FinalBill) {}
 }
 
 message Bill {
-    int32 itemNumber = 1;
+    string itemNumber = 1;
     int32 totalQuantity = 2;
     float totalPrice = 3;
 }
