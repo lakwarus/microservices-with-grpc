@@ -1,6 +1,7 @@
 import ballerina/grpc;
 import ballerina/log;
 
+// in memory map for item price list
 map<float> itemPriceList = {
     "item1" : 1.5,
     "item2" : 2.0,
