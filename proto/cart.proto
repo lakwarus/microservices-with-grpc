@@ -1,0 +1,18 @@
+syntax="proto3";
+
+package retail_shop;
+
+service CartService {
+    rpc AddToCart(Item) returns (Bill) {}
+}
+
+message Item {
+    string itemName = 1;
+    int32 quantity = 2;
+}
+
+message Bill {
+    int32 itemNumber = 1;
+    int32 totalQuantity = 2;
+    float totalPrice = 3;
+}

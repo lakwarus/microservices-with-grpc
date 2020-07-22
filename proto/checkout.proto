@@ -1,0 +1,17 @@
+syntax="proto3";
+
+package retail_shop;
+
+service CheckoutService {
+    rpc Checkout(stream Bill) returns (FinalBill) {}
+}
+
+message Bill {
+    int32 itemNumber = 1;
+    int32 totalQuantity = 2;
+    float totalPrice = 3;
+}
+
+message FinalBill {
+    float totalPrice = 1;
+}
