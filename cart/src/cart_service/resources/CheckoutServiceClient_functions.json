@@ -1,0 +1,1 @@
+{"lakmal/cart_service:0.1.0:CheckoutServiceClient" : [{"function":{"name":"Checkout","requiredParams":[{"msgListener":"service"},{"headers":"ballerina/grpc:0.7.0:Headers?"}],"returnType":"ballerina/grpc:0.7.0:StreamingClient"}}]}

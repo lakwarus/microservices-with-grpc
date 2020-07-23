@@ -4,10 +4,10 @@ package retail_shop;
 import "google/protobuf/wrappers.proto";
 
 service CheckoutService {
-    rpc Checkout(stream Order) returns (FinalBill) {}
+    rpc Checkout(stream InterimOrder) returns (FinalBill) {}
 }
 
-message Order {
+message InterimOrder {
     string itemNumber = 1;
     int32 totalQuantity = 2;
     float subTotal = 3;
