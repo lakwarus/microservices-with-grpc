@@ -5,25 +5,26 @@ listener grpc:Listener ep = new (9091);
 
 service CheckoutService on ep {
 
-    resource function Checkout(grpc:Caller caller, stream<Bill,error> clientStream) {
+    resource function Checkout(grpc:Caller caller, stream<Order,error> clientStream) {
         float totalBill = 0;
 
         //Iterating through streamed messages here
-        error? e = clientStream.forEach(function(Bill bill) {
-            totalBill += bill.totalPrice;            
+        error? e = clientStream.forEach(function(Order order) {
+            totalBill += order.subTotal;            
         });
 
         //Once the client completes stream, a grpc:EOS error is returned to indicate it
         if (e is grpc:EOS) {
             FinalBill finalBill = {
-                totalPrice:totalBill
+                total:totalBill
             };
             //Sending the total bill to the client
             grpc:Error? result = caller->send(finalBill);
             if (result is grpc:Error) {
-                log:printError("Error occured when sending the Finalbill: " + result.message() + " - " + <string>result.detail()["message"]);
+                log:printError("Error occured when sending the Finalbill: " + result.message() 
+                + " - " + <string>result.detail()["message"]);
             } else {
-                log:printInfo ("Sending Final Bill Total: " + finalBill.totalPrice.toString());
+                log:printInfo ("Sending Final Bill Total: " + finalBill.total.toString());
             }
             result = caller->complete();
             if (result is grpc:Error) {
@@ -33,20 +34,21 @@ service CheckoutService on ep {
         }
         //If the client sends an error instead it can be handled here
         else if (e is grpc:Error) {
-            log:printError("An unexpected error occured: " + e.message() + " - " + <string>e.detail()["message"]);
+            log:printError("An unexpected error occured: " + e.message() + " - " + 
+                                                    <string>e.detail()["message"]);
         }    
     }
 }
 
-public type Bill record {|
+public type Order record {|
     string itemNumber = "";
     int totalQuantity = 0;
-    float totalPrice = 0.0;
+    float subTotal = 0.0;
     
 |};
 
 public type FinalBill record {|
-    float totalPrice = 0.0;
+    float total = 0.0;
     
 |};
 

@@ -3,8 +3,8 @@ syntax="proto3";
 package retail_shop;
 import "google/protobuf/wrappers.proto";
 
-service BillService {
-    rpc UpdateBill(Item) returns (Bill);
+service OrderService {
+    rpc UpdateOrder(Item) returns (Order);
 }   
 
 message Item {
@@ -12,8 +12,8 @@ message Item {
     int32 quantity = 2;
 }
 
-message Bill {
+message Order {
     string itemNumber = 1;
     int32 totalQuantity = 2;
-    float totalPrice = 3;
+    float subTotal = 3;
 }

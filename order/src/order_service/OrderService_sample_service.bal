@@ -1,64 +1,43 @@
 import ballerina/grpc;
+import ballerina/log;
 
-public type BillServiceBlockingClient client object {
-
-    *grpc:AbstractClientEndpoint;
-
-    private grpc:Client grpcClient;
-
-    public function init(string url, grpc:ClientConfiguration? config = ()) {
-        // initialize client endpoint.
-        self.grpcClient = new(url, config);
-        checkpanic self.grpcClient.initStub(self, "blocking", ROOT_DESCRIPTOR, getDescriptorMap());
-    }
-
-    public remote function UpdateBill(Item req, grpc:Headers? headers = ()) returns ([Bill, grpc:Headers]|grpc:Error) {
-        
-        var payload = check self.grpcClient->blockingExecute("retail_shop.BillService/UpdateBill", req, headers);
-        grpc:Headers resHeaders = new;
-        anydata result = ();
-        [result, resHeaders] = payload;
-        
-        return [<Bill>result, resHeaders];
-        
-    }
-
+// in memory map for item price list
+map<float> itemPriceList = {
+    "item1" : 1.5,
+    "item2" : 2.0,
+    "item3" : 5.9
 };
 
-public type BillServiceClient client object {
+listener grpc:Listener ep = new (9090);
 
-    *grpc:AbstractClientEndpoint;
+service OrderService on ep {
 
-    private grpc:Client grpcClient;
+    resource function UpdateOrder(grpc:Caller caller, Item item) {
 
-    public function init(string url, grpc:ClientConfiguration? config = ()) {
-        // initialize client endpoint.
-        self.grpcClient = new(url, config);
-        checkpanic self.grpcClient.initStub(self, "non-blocking", ROOT_DESCRIPTOR, getDescriptorMap());
+        Order interimOrder = {};    
+        interimOrder.itemNumber = item.itemNumber;
+        interimOrder.totalQuantity = item.quantity;
+        interimOrder.subTotal = item.quantity * itemPriceList.get("item.itemNumber");
+
+        grpc:Error? result = caller->send(interimOrder);
+        if (result is grpc:Error) {
+            log:printError("Error from Connector: " + result.message());
+        }
     }
+}
 
-    public remote function UpdateBill(Item req, service msgListener, grpc:Headers? headers = ()) returns (grpc:Error?) {
-        
-        return self.grpcClient->nonBlockingExecute("retail_shop.BillService/UpdateBill", req, msgListener, headers);
-    }
-
-};
+public type Order record {|
+    string itemNumber = "";
+    int totalQuantity = 0;
+    float subTotal = 0.0;
+    
+|};
 
 public type Item record {|
     string itemNumber = "";
     int quantity = 0;
     
 |};
-
-
-public type Bill record {|
-    string itemNumber = "";
-    int totalQuantity = 0;
-    float totalPrice = 0.0;
-    
-|};
-
-
 
 const string ROOT_DESCRIPTOR = "0A0A62696C6C2E70726F746F120B72657461696C5F73686F701A1E676F6F676C652F70726F746F6275662F77726170706572732E70726F746F22420A044974656D121E0A0A6974656D4E756D626572180120012809520A6974656D4E756D626572121A0A087175616E7469747918022001280552087175616E74697479226C0A0442696C6C121E0A0A6974656D4E756D626572180120012809520A6974656D4E756D62657212240A0D746F74616C5175616E74697479180220012805520D746F74616C5175616E74697479121E0A0A746F74616C5072696365180320012802520A746F74616C507269636532410A0B42696C6C5365727669636512320A0A55706461746542696C6C12112E72657461696C5F73686F702E4974656D1A112E72657461696C5F73686F702E42696C6C620670726F746F33";
 function getDescriptorMap() returns map<string> {

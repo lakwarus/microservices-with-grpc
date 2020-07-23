@@ -1,0 +1,1 @@
+{"lakmal/cart_service:0.1.0:BillServiceBlockingClient" : [{"function":{"name":"UpdateBill","requiredParams":[{"req":"lakmal/cart_service:0.1.0:Item"},{"headers":"ballerina/grpc:0.7.0:Headers?"}],"returnType":"[lakmal/cart_service:0.1.0:Bill,ballerina/grpc:0.7.0:Headers]"}}]}
