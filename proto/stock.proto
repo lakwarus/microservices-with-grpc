@@ -23,7 +23,7 @@ option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
 }; */
 
 service StockService {
-    rpc UpdateStock(UpdateStockRequest) returns (Stock) {
+    rpc AddStock(UpdateStockRequest) returns (Stock) {
  /*       option (google.api.http) = {
           // Route to this method from POST requests to /api/v1/users
           put: "/api/v1/stock/"
@@ -35,13 +35,23 @@ service StockService {
           tags: "Stocks"
         }; */
     }
+    rpc deletStock(UpdateStockRequest) returns (Stock) {
+      /*       option (google.api.http) = {
+               // Route to this method from POST requests to /api/v1/users
+               delete: "/api/v1/stock/"
+               body: "*"
+             };
+             option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+               summary: "Update stock"
+               description: "Update current stock"
+               tags: "Stocks"
+             }; */
+    }
 }
 
 message UpdateStockRequest {}
 
 message Stock {
   string itemNumber = 1;
-  string name = 2;
-  int32 quantity = 3;
-  string action=4;
+  int32 quantity = 2;
 }
