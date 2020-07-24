@@ -2,7 +2,6 @@ import ballerina/http;
 import ballerina/io;
 import ballerina/grpc;
 
-map<Order> interimOrderMap = {};
 Order[] OrderArray = [];
 
 listener http:Listener httpListener = new(8080);
@@ -32,13 +31,16 @@ service cart on httpListener {
             grpc:Headers resHeaders;
             [result, resHeaders] = UpdateOrderResp;
             float subtotal = result["subTotal"];
-            io:println(result);
+
+            // push to OrderArray
+            OrderArray.push(<@untainted>result);
+
             // Sending response message.
             check caller->respond("Item: " + <@untainted>item.itemNumber + 
                                 " added to the cart. Subtotal = " + subtotal.toString());
         }
     }
-    
+
     @http:ResourceConfig {
         methods: ["GET"],
         path: "/checkout"
@@ -48,7 +50,6 @@ service cart on httpListener {
         grpc:StreamingClient | grpc:Error streamClient;
 
         io:println("Calling checkout service");
-        io:println(interimOrderMap);
         CheckoutServiceClient checkoutEp = new("http://localhost:9091");
 
         // Initialize call with checkout resource
@@ -84,43 +85,15 @@ service cart on httpListener {
             }
         }
 
-        // Update Stocks implementation goes here
-
         // send response to the user
         check caller->respond("Checkout Completed");
     }
 }
 
-// Message listener for incoming messages
-service OderServerMessageListener = service {
-
-    resource function onMessage(Order message) {
-
-        io:println("Received response from Order process");
-        Order order = {};
-        order.itemNumber = message.itemNumber;
-        order.totalQuantity = message.totalQuantity;
-        order.subTotal = message.subTotal;
-        OrderArray.push(<@untainted>order);
-        io:println("Received interim Order");
-        
-    }
-
-    resource function onError(error err) {
-        io:println("Error reported from server: " + err.message() + " - "
-                                           + <string>err.detail()["message"]);
-    }
-
-    resource function onComplete() {
-        io:println("Interim oder completed");
-        CheckoutServiceClient checkoutep = new("http://localhost:9091");
-    }
-};
-
 service CheckoutServiceMessageListener = service {
 
     resource function onMessage(FinalBill message) {
-        io:println("Final Bill Total:" + message.total.toString());
+        io:println("Final Bill :" + message.total.toString());
     }
 
     resource function onError(error err) {
@@ -129,6 +102,8 @@ service CheckoutServiceMessageListener = service {
 
     resource function onComplete() {
         // Implementation goes here.
+        // Update Stocks implementation goes here
+
     }
 };
 

@@ -14,7 +14,7 @@ service OrderService on ep {
 
     resource function UpdateOrder(grpc:Caller caller, Item item) returns error? {
 
-        io:println("Interim order process started!");
+        io:println("Interim order process started");
 
         Order interimOrder = {};    
         interimOrder.itemNumber = item.itemNumber;
@@ -22,15 +22,16 @@ service OrderService on ep {
         () | float unitprice = itemPriceList[item.itemNumber];
         if unitprice is float {
             interimOrder.subTotal = item.quantity * unitprice;
+
+            io:println("Sub total for interim order: " + interimOrder.subTotal.toString());
+
+            check caller->send(interimOrder);
+            check caller->complete();
+            io:println("Interim order update completed!");
+
         } else {
             io:println("Unit price not found for :" + item.itemNumber);
-        }
-
-        io:println(interimOrder);
-
-        check caller->send(interimOrder);
-        check caller->complete();
-        io:println("Interim order update completed!");
+        }    
     }
 }
 
