@@ -49,7 +49,7 @@ service cart on httpListener {
 
         grpc:StreamingClient | grpc:Error streamClient;
 
-        io:println("Calling checkout service");
+        io:println("Calling checkout service....");
         CheckoutServiceClient checkoutEp = new("http://localhost:9091");
 
         // Initialize call with checkout resource
@@ -61,10 +61,10 @@ service cart on httpListener {
         } else {
 
             //Start sending messages to the checkout server
-            io:println("Sending interim orders to checkout service");
+            io:println("Sending interim orders to checkout service:");
 
             int sum = 0;
-            foreach var i in 1..< OrderArray.length() {
+            foreach var i in 0..< OrderArray.length() {
                 sum = sum + i;
                 Order value = {};
                 value = OrderArray.pop();
@@ -93,7 +93,8 @@ service cart on httpListener {
 service CheckoutServiceMessageListener = service {
 
     resource function onMessage(FinalBill message) {
-        io:println("Final Bill :" + message.total.toString());
+        io:println("=======================================");
+        io:println("Final Bill: " + message.total.toString());
     }
 
     resource function onError(error err) {
