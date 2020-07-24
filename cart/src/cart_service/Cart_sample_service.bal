@@ -75,6 +75,9 @@ service cart on httpListener {
             }
         }
 
+        // Update Stocks implementation goes here
+
+        // send response to the user
         check caller->respond("Checkout Completed");
     }
 }

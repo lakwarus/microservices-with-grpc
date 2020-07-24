@@ -2,56 +2,25 @@ syntax="proto3";
 
 package retail_shop;
 
-import "google/protobuf/wrappers.proto";
-//import "protoc-gen-openapiv2/options/annotations.proto";
-
-// Defines the import path that should be used to import the generated package,
-// and the package name.
-/*
-option go_package = "https://github.com/lakwarus/microservices-with-gRPC/proto;stock";
-
-// These annotations are used when generating the OpenAPI file.
-option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
-  info: {
-    version: "1.0";
-  };
-  external_docs: {
-    url: "https://github.com/lakwarus/microservices-with-gRPC";
-    description: "microservices-with-gRPC repository";
-  }
-  schemes: HTTPS;
-}; */
+import "google/api/annotations.proto";
 
 service StockService {
-    rpc AddStock(UpdateStockRequest) returns (Stock) {
- /*       option (google.api.http) = {
-          // Route to this method from POST requests to /api/v1/users
-          put: "/api/v1/stock/"
-          body: "*"
+    rpc UpdateStock(UpdateStockRequest) returns (Stock) { 
+        option (google.api.http) = {
+            // Route to this method from POST requests to /api/v1/stock
+            put: "/api/v1/stock/"
+            body: "*"
         };
-        option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
-          summary: "Update stock"
-          description: "Update current stock"
-          tags: "Stocks"
-        }; */
-    }
-    rpc deletStock(UpdateStockRequest) returns (Stock) {
-      /*       option (google.api.http) = {
-               // Route to this method from POST requests to /api/v1/users
-               delete: "/api/v1/stock/"
-               body: "*"
-             };
-             option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
-               summary: "Update stock"
-               description: "Update current stock"
-               tags: "Stocks"
-             }; */
     }
 }
 
-message UpdateStockRequest {}
+message UpdateStockRequest {
+    string mode = 1;
+    string itemNumber = 2;
+    int32 quantity = 3;
+}
 
 message Stock {
-  string itemNumber = 1;
-  int32 quantity = 2;
+    string itemNumber = 1;
+    int32 quantity = 2;
 }
