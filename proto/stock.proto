@@ -2,13 +2,15 @@ syntax="proto3";
 
 package retail_shop;
 
+option go_package = "../stock/gen;gen";
+
 import "google/api/annotations.proto";
 
 service StockService {
     rpc UpdateStock(UpdateStockRequest) returns (Stock) { 
         option (google.api.http) = {
             // Route to this method from POST requests to /api/v1/stock
-            put: "/api/v1/stock/"
+            put: "/api/v1/stock"
             body: "*"
         };
     }
