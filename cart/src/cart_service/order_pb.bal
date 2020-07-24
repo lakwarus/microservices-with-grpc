@@ -22,7 +22,6 @@ public type OrderServiceBlockingClient client object {
         return [<Order>result, resHeaders];
         
     }
-
 };
 
 public type OrderServiceClient client object {
@@ -41,7 +40,6 @@ public type OrderServiceClient client object {
         
         return self.grpcClient->nonBlockingExecute("retail_shop.OrderService/UpdateOrder", req, msgListener, headers);
     }
-
 };
 
 public type Order record {|
