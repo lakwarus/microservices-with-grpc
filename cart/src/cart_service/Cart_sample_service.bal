@@ -23,13 +23,22 @@ service cart on httpListener {
         item.itemNumber = <string>itemReq.itemNumber;
         item.quantity = <int>itemReq.quantity;
 
-        OrderServiceClient orderEp = new("http://localhost:9090");
-        var result = orderEp->UpdateOrder(item,OderServerMessageListener);
-    
-        // Sending response message.
-        check caller->respond("Item: " + <@untainted>item.itemNumber + " added to the cart");
-
+        OrderServiceBlockingClient blockingEp = new("http://localhost:9090");
+        var UpdateOrderResp = blockingEp->UpdateOrder(item);
+        if (UpdateOrderResp is grpc:Error) {
+            io:println("Error from Connector: " + UpdateOrderResp.message());
+        } else {
+            Order result;
+            grpc:Headers resHeaders;
+            [result, resHeaders] = UpdateOrderResp;
+            float subtotal = result["subTotal"];
+            io:println(result);
+            // Sending response message.
+            check caller->respond("Item: " + <@untainted>item.itemNumber + 
+                                " added to the cart. Subtotal = " + subtotal.toString());
+        }
     }
+    
     @http:ResourceConfig {
         methods: ["GET"],
         path: "/checkout"

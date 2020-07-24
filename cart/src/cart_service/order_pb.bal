@@ -9,7 +9,7 @@ public type OrderServiceBlockingClient client object {
     public function init(string url, grpc:ClientConfiguration? config = ()) {
         // initialize client endpoint.
         self.grpcClient = new(url, config);
-        checkpanic self.grpcClient.initStub(self, "blocking", ROOT_DESCRIPTOR, getDescriptorMap());
+        checkpanic self.grpcClient.initStub(self, "blocking", ROOT_DESCRIPTOR1, getDescriptorMap1());
     }
 
     public remote function UpdateOrder(Item req, grpc:Headers? headers = ()) returns ([Order, grpc:Headers]|grpc:Error) {
