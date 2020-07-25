@@ -2,7 +2,7 @@ syntax="proto3";
 
 package retail_shop;
 
-option go_package = "../gen_code/gen;gen";
+option go_package = "../stock/gen;gen";
 
 import "google/api/annotations.proto";
 
