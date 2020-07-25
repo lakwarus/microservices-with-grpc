@@ -1,0 +1,1 @@
+{"lakmal/cart_service:0.1.0:StockServiceBlockingClient" : [{"function":{"name":"UpdateStock","requiredParams":[{"req":"lakmal/cart_service:0.1.0:UpdateStockRequest"},{"headers":"ballerina/grpc:0.7.0:Headers?"}],"returnType":"[lakmal/cart_service:0.1.0:Stock,ballerina/grpc:0.7.0:Headers]"}}]}

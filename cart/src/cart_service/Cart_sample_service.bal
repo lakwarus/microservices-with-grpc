@@ -22,7 +22,7 @@ service cart on httpListener {
         item.itemNumber = <string>itemReq.itemNumber;
         item.quantity = <int>itemReq.quantity;
 
-        OrderServiceBlockingClient blockingEp = new("http://localhost:9090");
+        OrderServiceBlockingClient blockingEp = new("http://localhost:9092");
         var UpdateOrderResp = blockingEp->UpdateOrder(item);
         if (UpdateOrderResp is grpc:Error) {
             io:println("Error from Connector: " + UpdateOrderResp.message());
@@ -87,6 +87,17 @@ service cart on httpListener {
 
         // send response to the user
         check caller->respond("Checkout Completed");
+
+        // Update Stocks implementation goes here
+        UpdateStockRequest stockUpdate ={};
+        StockServiceBlockingClient blockingStockEp = new("http://localhost:9090");
+        var stockUpdateResult = blockingStockEp->UpdateStock(stockUpdate);
+        if (stockUpdateResult is grpc:Error) {
+            io:println("Error from Connector: " + stockUpdateResult.message());
+        } else {
+            io:println("Stock Updated!");
+        }
+
     }
 }
 
@@ -103,8 +114,6 @@ service CheckoutServiceMessageListener = service {
 
     resource function onComplete() {
         // Implementation goes here.
-        // Update Stocks implementation goes here
-
     }
 };
 

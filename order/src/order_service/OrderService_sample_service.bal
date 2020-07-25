@@ -8,7 +8,7 @@ map<float> itemPriceList = {
     "item3" : 5.9
 };
 
-listener grpc:Listener ep = new (9090);
+listener grpc:Listener ep = new (9092);
 
 service OrderService on ep {
 
