@@ -21,6 +21,7 @@ $ ballerina run checkout_service
 
 ### running stock microservice
 $ cd stock
+$ go run main/main.go
 
 ### sample payload
 $ ./order.sh
