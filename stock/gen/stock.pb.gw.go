@@ -13,6 +13,7 @@ import (
 	"io"
 	"net/http"
 
+	"github.com/golang/protobuf/descriptor"
 	"github.com/golang/protobuf/proto"
 	"github.com/grpc-ecosystem/grpc-gateway/runtime"
 	"github.com/grpc-ecosystem/grpc-gateway/utilities"
@@ -22,11 +23,13 @@ import (
 	"google.golang.org/grpc/status"
 )
 
+// Suppress "imported and not used" errors
 var _ codes.Code
 var _ io.Reader
 var _ status.Status
 var _ = runtime.String
 var _ = utilities.NewDoubleArray
+var _ = descriptor.ForMessage
 
 func request_StockService_UpdateStock_0(ctx context.Context, marshaler runtime.Marshaler, client StockServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var protoReq UpdateStockRequest
@@ -65,6 +68,7 @@ func local_request_StockService_UpdateStock_0(ctx context.Context, marshaler run
 // RegisterStockServiceHandlerServer registers the http handlers for service StockService to "mux".
 // UnaryRPC     :call StockServiceServer directly.
 // StreamingRPC :currently unsupported pending https://github.com/grpc/grpc-go/issues/906.
+// Note that using this registration option will cause many gRPC library features (such as grpc.SendHeader, etc) to stop working. Consider using RegisterStockServiceHandlerFromEndpoint instead.
 func RegisterStockServiceHandlerServer(ctx context.Context, mux *runtime.ServeMux, server StockServiceServer) error {
 
 	mux.Handle("PUT", pattern_StockService_UpdateStock_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
