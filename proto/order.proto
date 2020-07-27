@@ -1,7 +1,6 @@
 syntax="proto3";
 
 package retail_shop;
-import "google/protobuf/wrappers.proto";
 
 service OrderService {
     rpc UpdateOrder(Item) returns (Order);
