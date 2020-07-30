@@ -17,9 +17,8 @@ service StockService {
 }
 
 message UpdateStockRequest {
-    string mode = 1;
-    string itemNumber = 2;
-    int32 quantity = 3;
+    string itemNumber = 1;
+    int32 quantity = 2;
 }
 
 message Stock {
