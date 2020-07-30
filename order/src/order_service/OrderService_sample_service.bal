@@ -1,5 +1,6 @@
 import ballerina/grpc;
 import ballerina/io;
+import ballerina/log;
 
 // in memory map for unit price list
 map<float> itemPriceList = {
@@ -12,7 +13,7 @@ listener grpc:Listener ep = new (9092);
 
 service OrderService on ep {
 
-    resource function UpdateOrder(grpc:Caller caller, Item item) returns error? {
+    resource function UpdateOrder(grpc:Caller caller, Item item) {
 
         io:println("Interim order process started");
 
@@ -25,8 +26,15 @@ service OrderService on ep {
 
             io:println("Sub total for interim order: " + interimOrder.subTotal.toString());
 
-            check caller->send(interimOrder);
-            check caller->complete();
+            var err = caller->send(interimOrder);
+            if (err is grpc:Error) {
+                log:printError("Error from Connector: " + err.message());
+            }
+            grpc:Error? result = caller->complete();
+            if (result is grpc:Error) {
+                log:printError("Error in sending completed notification to caller",
+                err = result);
+            }
             io:println("Interim order update completed!");
 
         } else {
