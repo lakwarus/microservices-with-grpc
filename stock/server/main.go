@@ -14,8 +14,6 @@ import (
 )
 
 var (
-	// command-line options:
-	// gRPC server endpoint
 	grpcServerEndpoint = flag.String("grpc-server-endpoint", "localhost:9090", "gRPC server endpoint")
 )
 
@@ -23,9 +21,14 @@ type server struct {
 }
 
 func (*server) UpdateStock(ctx context.Context, request *gen.UpdateStockRequest) (*gen.Stock, error) {
-	//itemNo := request.GetItemNumber
-	//quantity := request.GetQuantity
-	response := &gen.Stock{}
+
+	// mock bussiness logic
+	println("Stock Updating...")
+	response := &gen.Stock{
+		// return mock value
+		ItemNumber: "item1",
+		Quantity:   40,
+	}
 	return response, nil
 }
 
