@@ -21,7 +21,9 @@ $ ballerina run checkout_service
 
 ### running stock microservice
 $ cd stock
-$ go run main/main.go
+$ go run stock/server/main.go
+Server is listening on 0.0.0.0:9090 ...
+$ go run gateway/main.go 
 
 ### sample payload
 $ ./order.sh
