@@ -72,9 +72,6 @@
     "retail_shopUpdateStockRequest": {
       "type": "object",
       "properties": {
-        "mode": {
-          "type": "string"
-        },
         "itemNumber": {
           "type": "string"
         },
